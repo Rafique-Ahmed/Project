@@ -14,18 +14,22 @@ public class GameManager : MonoBehaviour
     public GameObject pauseMenuUI;
     public GameObject GameUI;
 
+    public bool gameOn = true;
+
     // Update is called once per frame
     void Update(){
-        //Escape key press to move toward pause UI
-        if (Input.GetKeyDown(KeyCode.Escape)){
-           // Debug.Log("Key pressed");
-            if(GameisPaused){
-               // Debug.Log("IF");
-                Resume();
-            }
-            else{
-               // Debug.Log("Else");
-                Pasue();
+        if(gameOn){
+            //Escape key press to move toward pause UI
+            if (Input.GetKeyDown(KeyCode.Escape)){
+            // Debug.Log("Key pressed");
+                if(GameisPaused){
+                // Debug.Log("IF");
+                    Resume();
+                }
+                else{
+                // Debug.Log("Else");
+                    Pasue();
+                }
             }
         }
     }
@@ -35,9 +39,13 @@ public class GameManager : MonoBehaviour
         pauseMenuUI.SetActive(false);
         Time.timeScale = 1f;
         GameisPaused = false;
-        Cursor.visible = false;
         GameUI.SetActive(true);
-    }
+
+        //to lock in the centre of window
+        Cursor.lockState = CursorLockMode.Locked;
+        //to hide the curser
+        Cursor.visible = false;
+}
     //Resume function ends
     //Pause function start
     void Pasue(){
@@ -45,6 +53,8 @@ public class GameManager : MonoBehaviour
         GameUI.SetActive(false);
         Time.timeScale = 0f;
         GameisPaused = true;
+        
+        Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
     }
     //Pause function Ends

@@ -5,6 +5,7 @@ using TMPro;
 
 public class PlayerContrller : MonoBehaviour
 {
+    private GameManager gameManager;
     public GameObject GameUI;
     // Life variables
     int life = 2;
@@ -21,10 +22,13 @@ public class PlayerContrller : MonoBehaviour
 
     //Player movement variables
     private float horizontalInput;
-    private float speed = 3.0f;
+    private float speed = 5.0f;
+
+    
     // Start is called before the first frame update
     void Start()
     {
+        gameManager = GameObject.Find("Game Manager").GetComponent<GameManager>();
         //Health decleration
         currentHealth = maxHealth;
 		healthBar.SetMaxHealth(maxHealth);
@@ -33,11 +37,7 @@ public class PlayerContrller : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        //Player Direction Inputs
-        float verticalInput = Input.GetAxis("Vertical");
-        float horizontalInput = Input.GetAxis("Horizontal");
-        transform.Translate(Vector3.forward * verticalInput * Time.deltaTime * speed);
-        transform.Translate(Vector3.right * horizontalInput * Time.deltaTime * speed);
+        movement();
     }
 
 
@@ -50,8 +50,12 @@ public class PlayerContrller : MonoBehaviour
             if(life==0){
             Time.timeScale = 0f;
             GameOverUI.SetActive(true);
-            Cursor.visible = true;
             GameUI.SetActive(false);
+
+            Cursor.lockState = CursorLockMode.None;
+            Cursor.visible = true;
+
+            gameManager.gameOn = false;
             }
             else{
                 currentHealth = 100;
@@ -73,5 +77,17 @@ public class PlayerContrller : MonoBehaviour
         }
     }
         //Player enmey attack projectile detection function Ends
+
+    void movement(){
+        //Player Direction Inputs
+        float verticalInput = Input.GetAxis("Vertical");
+        float horizontalInput = Input.GetAxis("Horizontal");
+        transform.Translate(Vector3.forward * verticalInput * Time.deltaTime * speed);
+        transform.Translate(Vector3.right * horizontalInput * Time.deltaTime * speed);
+    }
+
+    void move(){
+
+    }
 
 }

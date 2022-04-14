@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.AI;
 public class AIController : MonoBehaviour
 {
+    private Animator playerAnim; 
 //Script of Enemy AI Controller for movement, patrolling and detection
     public GameObject projectile;
     private float timeBtwShots;
@@ -16,7 +17,7 @@ public class AIController : MonoBehaviour
     public float speedWalk = 6;                     //  Walking speed, speed in the nav mesh agent
     public float speedRun = 9;                      //  Running speed
 
-    public float viewRadius = 15;                   //  Radius of the enemy view
+    public float viewRadius = 40;                   //  Radius of the enemy view
     public float viewAngle = 90;                    //  Angle of the enemy view
     public LayerMask playerMask;                    //  To detect the player with the raycast
     public LayerMask obstacleMask;                  //  To detect the obstacules with the raycast
@@ -40,6 +41,7 @@ public class AIController : MonoBehaviour
 
     void Start()
     {
+        playerAnim = GetComponent<Animator>();
         timeBtwShots = startTimeBtwShots;
 
 
@@ -62,6 +64,7 @@ public class AIController : MonoBehaviour
 
     private void Update()
     {
+        
             EnviromentView();                       //  Check whether or not the player is in the enemy's field of vision
 
         if (!m_IsPatrol)
@@ -149,11 +152,12 @@ public class AIController : MonoBehaviour
 
     private void OnAnimatorMove()
     {
-
+        playerAnim.Play ("Walk");
     }
 
     public void NextPoint()
     {
+        playerAnim.Play("idle1");
         m_CurrentWaypointIndex = (m_CurrentWaypointIndex + 1) % waypoints.Length;
         navMeshAgent.SetDestination(waypoints[m_CurrentWaypointIndex].position);
     }
@@ -162,12 +166,14 @@ public class AIController : MonoBehaviour
     {
         navMeshAgent.isStopped = true;
         navMeshAgent.speed = 0;
+        
     }
 
     void Move(float speed)
     {
         navMeshAgent.isStopped = false;
         navMeshAgent.speed = speed;
+        
     }
 
     void CaughtPlayer()
@@ -227,6 +233,7 @@ public class AIController : MonoBehaviour
                  *  Or the enemy is a safe zone, the enemy will no chase
                  * */
                 m_playerInRange = false;                //  Change the sate of chasing
+                
             }
             if (m_playerInRange)
             {
@@ -236,6 +243,8 @@ public class AIController : MonoBehaviour
                 //m_PlayerPosition = player.transform.position;       //  Save the player's current position if the player is in range of vision
                 m_PlayerPosition = this.transform.position;
                 if(timeBtwShots <= 10){
+                
+                playerAnim.Play ("Attack1");
                 Instantiate(projectile, transform.position, Quaternion.identity);
                 timeBtwShots = startTimeBtwShots;
                 }else{

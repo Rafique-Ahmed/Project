@@ -1,9 +1,12 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 
 public class SpawnManager : MonoBehaviour
 {
+    private GameManager gameManager;
+    public TextMeshProUGUI EnemycountText;
     public GameObject GameUI;
     //This script will spawn enemy
     public GameObject GameWinUI;
@@ -16,7 +19,7 @@ public class SpawnManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-       
+       gameManager = GameObject.Find("Game Manager").GetComponent<GameManager>();
     }
     private Vector3 GenerateSpawnPosition() { 
         float spawnPosX = Random.Range(-SpawnRange, SpawnRange);
@@ -36,13 +39,18 @@ public class SpawnManager : MonoBehaviour
     void Update()
     {
         enemyCount = FindObjectsOfType<AIController>().Length;
+        EnemycountText.text = "Enemies " + enemyCount;
         if(enemyCount == 0){
             waveNumber++;
             if(waveNumber>5){
                 GameWinUI.SetActive(true);
                 Time.timeScale = 0f;
-                Cursor. visible = true;
                 GameUI.SetActive(false);
+
+                Cursor.lockState = CursorLockMode.None;
+                Cursor.visible = true;
+
+                gameManager.gameOn = false;
             }
 
             else {
